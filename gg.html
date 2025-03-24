@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number Guessing Game</title>
+    <body style="background-color: #76bba4;">
+
+    <style>
+        body {
+        
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+        }
+        input, button {
+            padding: 10px;
+            margin: 10px;
+            font-size: 16px;
+        }
+        .feedback {
+            font-size: 20px;
+            margin-top: 20px;
+        }
+        #attempts {
+            font-size: 18px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Welcome to the Number Guessing Game!</h1>
+    <img src="thumbnail_guess-the-no.jpg" alt="Game" class="center" width="700" height="300">
+    <p>Try to guess each number I am thinking of between 1 and 10!</p>
+    <p>You will need to guess four different numbers!</p>
+
+    <input type="number" id="guess" placeholder="Enter your guess" min="1" max="10">
+    <button onclick="checkGuess()">Submit Guess</button>
+
+    <div id="feedback" class="feedback"></div>
+    <div id="attempts"></div>
+    <div id="currentNumber"></div>
+
+    <script>
+        // Generate four random numbers between 1 and 10
+        let randomNumbers = [];
+        for (let i = 0; i < 4; i++) {
+            randomNumbers.push(Math.floor(Math.random() * 10) + 1);
+        }
+        
+        let currentIndex = 0; // Track which number the user is guessing
+        let attempts = 0; // Track the number of attempts
+
+        function checkGuess() {
+            const guess = parseInt(document.getElementById('guess').value);
+            const feedback = document.getElementById('feedback');
+            const attemptsDiv = document.getElementById('attempts');
+            const currentNumberDiv = document.getElementById('currentNumber');
+            attempts++;
+
+            // Validate input
+            if (isNaN(guess) || guess < 1 || guess > 10) {
+                feedback.innerHTML = "Please enter a valid number between 1 and 10!";
+                return;
+            }
+
+            // Check if guess is correct
+            if (guess < randomNumbers[currentIndex]) {
+                feedback.innerHTML = "Too low! Try again.";
+            } else if (guess > randomNumbers[currentIndex]) {
+                feedback.innerHTML = "Too high! Try again.";
+            } else {
+                feedback.innerHTML = `Correct! You've guessed the number ${randomNumbers[currentIndex]}.`;
+                
+                // Move to the next number
+                currentIndex++;
+
+                if (currentIndex < 4) {
+                    currentNumberDiv.innerHTML = `Now, guess the next number between 1 and 10.`;
+                } else {
+                    feedback.innerHTML = `Congratulations! You've guessed all numbers correctly!`;
+                    attemptsDiv.innerHTML = `It took you ${attempts} attempts to guess all the numbers.`;
+                    document.getElementById('guess').disabled = true;
+                    document.querySelector('button').disabled = true;
+                }
+            }
+
+            // Clear the input field after each guess
+            document.getElementById('guess').value = "";
+        }
+
+        // Display the first number the user has to guess
+        document.getElementById('currentNumber').innerHTML = `Guess the first number between 1 and 10.`;
+    </script>
+
+</body>
+</html>
